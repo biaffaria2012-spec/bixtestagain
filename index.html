@@ -1,51 +1,3157 @@
 <!doctype html>
 <html lang="pt-BR">
 <head>
-<meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+
 <title>BIXSPACE</title>
+
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+
 <style>
-*{box-sizing:border-box}html,body{margin:0;min-height:100%;font-family:Arial,sans-serif;background:#080808;color:#fff}button,input,textarea,select{font:inherit}button{cursor:pointer}.hidden{display:none!important}.center{min-height:100vh;display:flex;align-items:center;justify-content:center;padding:20px}.card{background:#151515;border:1px solid #292929;border-radius:18px;padding:22px;box-shadow:0 20px 60px #0009}.auth{width:min(430px,100%)}.logo{font-weight:950;letter-spacing:7px;font-size:30px}.muted{color:#999}label{display:block;color:#aaa;font-size:13px;margin:14px 0 7px}input,textarea,select{width:100%;background:#0d0d0d;color:#fff;border:1px solid #333;border-radius:10px;padding:11px;outline:0}textarea{min-height:90px;resize:vertical}.primary{border:0;background:#fff;color:#080808;font-weight:800;border-radius:10px;padding:12px 16px}.secondary{background:#191919;color:#fff;border:1px solid #383838;border-radius:10px;padding:10px 14px}.danger{background:#251414;color:#ffb5b5;border-color:#5b2929}.link{background:none;border:0;color:#fff;text-decoration:underline}.msg{min-height:18px;color:#ff9c9c;font-size:13px;margin-top:10px}.app{min-height:100vh;display:grid;grid-template-columns:220px 1fr}aside{background:#0d0d0d;border-right:1px solid #242424;padding:24px 16px;position:sticky;top:0;height:100vh}nav{display:grid;gap:6px;margin-top:30px}nav button{background:none;border:0;color:#999;text-align:left;padding:12px;border-radius:10px}nav button.active,nav button:hover{background:#1a1a1a;color:#fff}.logout{width:100%;margin-top:25px}main{width:min(1100px,100%);margin:auto;padding:30px 20px}.top{display:flex;justify-content:space-between;align-items:center;margin-bottom:18px}.grid{display:grid;grid-template-columns:1fr 330px;gap:18px}.profile-card{overflow:hidden;padding:0}.cover{height:180px;background:#222 center/cover no-repeat;position:relative}.profile-head{padding:0 22px 22px;position:relative}.avatar{width:92px;height:92px;border-radius:50%;background:#292929;border:4px solid #151515;display:flex;align-items:center;justify-content:center;font-size:30px;font-weight:900;overflow:hidden}.avatar img{width:100%;height:100%;object-fit:cover}.profile-head .avatar{margin-top:-46px}.handle{color:#888}.bio{line-height:1.6;color:#ddd;white-space:pre-wrap}.section-title{font-size:13px;text-transform:uppercase;letter-spacing:2px;color:#888;margin-bottom:12px}.wall-post{border-top:1px solid #292929;padding:14px 0}.wall-post:first-child{border-top:0}.wall-meta{font-size:12px;color:#777;margin-top:6px}.search{display:flex;gap:8px}.search input{flex:1}.row{display:flex;gap:12px;align-items:center;padding:13px 0;border-bottom:1px solid #292929}.grow{flex:1}.empty{text-align:center;color:#888;padding:25px}.chips{display:flex;flex-wrap:wrap;gap:7px}.chip{padding:7px 10px;border:1px solid #3b3b3b;border-radius:999px;background:#1a1a1a;font-size:13px}.music{display:flex;gap:12px;align-items:center;padding:12px;border:1px solid #333;border-radius:12px;background:#101010}.music-icon{font-size:26px}.sticker-area{position:relative;min-height:220px;border:1px dashed #444;border-radius:12px;overflow:hidden;background:#0d0d0d}.sticker{position:absolute;user-select:none}.editor-grid{display:grid;grid-template-columns:1fr 1fr;gap:14px}.full{grid-column:1/-1}.swatches{display:flex;gap:8px;flex-wrap:wrap}.swatch{width:34px;height:34px;border-radius:50%;border:2px solid #555;cursor:pointer}.custom-preview{min-height:260px;border-radius:16px;padding:22px;position:relative;overflow:hidden}.toast{position:fixed;right:18px;bottom:18px;background:#fff;color:#111;padding:12px 16px;border-radius:10px;font-weight:700;z-index:10}@media(max-width:800px){.app{grid-template-columns:1fr}aside{height:auto;position:static;border-right:0;border-bottom:1px solid #242424;padding:16px}nav{display:flex;overflow:auto;margin-top:12px}nav button{white-space:nowrap}.logout{display:none}.grid{grid-template-columns:1fr}.editor-grid{grid-template-columns:1fr}.full{grid-column:auto}main{padding:20px 14px}}
+*{
+  box-sizing:border-box;
+}
+
+html,body{
+  margin:0;
+  min-height:100%;
+  font-family:Arial,sans-serif;
+  background:#080808;
+  color:white;
+}
+
+body{
+  background-size:cover;
+  background-position:center;
+  background-attachment:fixed;
+}
+
+button,
+input,
+textarea,
+select{
+  font:inherit;
+}
+
+button{
+  cursor:pointer;
+}
+
+.hidden{
+  display:none!important;
+}
+
+#app{
+  min-height:100vh;
+}
+
+.topbar{
+  position:sticky;
+  top:0;
+  z-index:1000;
+  display:flex;
+  align-items:center;
+  justify-content:space-between;
+  padding:12px 18px;
+  background:rgba(5,5,5,.94);
+  border-bottom:1px solid #333;
+  backdrop-filter:blur(12px);
+}
+
+.logo{
+  font-size:24px;
+  font-weight:900;
+  letter-spacing:3px;
+}
+
+.nav{
+  display:flex;
+  gap:7px;
+  flex-wrap:wrap;
+}
+
+.nav button{
+  background:#151515;
+  color:#fff;
+  border:1px solid #333;
+  border-radius:10px;
+  padding:8px 12px;
+}
+
+.nav button:hover{
+  border-color:#777;
+}
+
+.container{
+  width:min(1100px,94%);
+  margin:25px auto;
+}
+
+.card{
+  background:rgba(12,12,12,.92);
+  border:1px solid #292929;
+  border-radius:18px;
+  padding:20px;
+  margin-bottom:18px;
+  box-shadow:0 10px 35px rgba(0,0,0,.25);
+}
+
+h1,h2,h3{
+  margin-top:0;
+}
+
+input,
+textarea,
+select{
+  width:100%;
+  padding:11px;
+  margin:6px 0 12px;
+  color:white;
+  background:#111;
+  border:1px solid #333;
+  border-radius:10px;
+  outline:none;
+}
+
+textarea{
+  min-height:110px;
+  resize:vertical;
+}
+
+input:focus,
+textarea:focus,
+select:focus{
+  border-color:#aaa;
+}
+
+.primary{
+  background:#fff;
+  color:#000;
+  border:0;
+  padding:11px 16px;
+  border-radius:10px;
+  font-weight:bold;
+}
+
+.secondary{
+  background:#191919;
+  color:#fff;
+  border:1px solid #444;
+  padding:10px 14px;
+  border-radius:10px;
+}
+
+.danger{
+  background:#321313;
+  color:#fff;
+  border:1px solid #7d3030;
+  padding:8px 12px;
+  border-radius:9px;
+}
+
+.row{
+  display:flex;
+  gap:12px;
+  flex-wrap:wrap;
+}
+
+.row>*{
+  flex:1;
+  min-width:180px;
+}
+
+.auth{
+  width:min(430px,94%);
+  margin:70px auto;
+}
+
+.small{
+  color:#aaa;
+  font-size:13px;
+}
+
+.muted{
+  color:#888;
+}
+
+.toast{
+  position:fixed;
+  right:20px;
+  bottom:20px;
+  z-index:9999;
+  padding:12px 16px;
+  background:#fff;
+  color:#000;
+  border-radius:12px;
+  font-weight:bold;
+  display:none;
+}
+
+/* PROFILE */
+
+.profile{
+  position:relative;
+  overflow:hidden;
+  border:1px solid #333;
+  border-radius:22px;
+  background:#0b0b0b;
+  min-height:650px;
+}
+
+.profile-banner{
+  height:230px;
+  background:#171717;
+  background-size:cover;
+  background-position:center;
+  position:relative;
+}
+
+.profile-overlay{
+  position:absolute;
+  inset:0;
+  background:linear-gradient(
+    transparent 40%,
+    rgba(0,0,0,.8)
+  );
+}
+
+.profile-main{
+  position:relative;
+  margin-top:-70px;
+  padding:0 30px 30px;
+}
+
+.avatar{
+  width:130px;
+  height:130px;
+  border-radius:50%;
+  object-fit:cover;
+  background:#222;
+  border:5px solid #0b0b0b;
+}
+
+.profile-name{
+  font-size:32px;
+  font-weight:900;
+  margin:10px 0 3px;
+}
+
+.profile-bio{
+  color:#ccc;
+  white-space:pre-wrap;
+}
+
+.section{
+  margin-top:25px;
+}
+
+.section-title{
+  font-size:18px;
+  font-weight:bold;
+  margin-bottom:10px;
+}
+
+.interests{
+  display:flex;
+  gap:7px;
+  flex-wrap:wrap;
+}
+
+.interest{
+  border:1px solid #444;
+  padding:6px 10px;
+  border-radius:999px;
+  font-size:13px;
+}
+
+.wall-post{
+  padding:13px;
+  border:1px solid #2b2b2b;
+  border-radius:12px;
+  background:#101010;
+  margin-top:8px;
+}
+
+.wall-author{
+  font-weight:bold;
+}
+
+.wall-date{
+  color:#777;
+  font-size:11px;
+}
+
+.profile-music{
+  width:100%;
+}
+
+/* DECORATIONS */
+
+.decoration-area{
+  position:relative;
+  min-height:500px;
+  overflow:hidden;
+  border:1px dashed #333;
+  border-radius:15px;
+  background:
+    radial-gradient(circle at center,#151515,#080808);
+}
+
+.editor-sticker{
+  position:absolute;
+  user-select:none;
+  touch-action:none;
+}
+
+.editor-sticker img{
+  width:100%;
+  height:100%;
+  object-fit:contain;
+  pointer-events:none;
+}
+
+.photo-sticker{
+  position:absolute;
+  user-select:none;
+  touch-action:none;
+  cursor:move;
+}
+
+.photo-sticker img{
+  width:100%;
+  height:100%;
+  object-fit:contain;
+  pointer-events:none;
+}
+
+.sticker-controls{
+  margin-top:8px;
+  padding:10px;
+  border:1px solid #292929;
+  border-radius:12px;
+  background:#0e0e0e;
+}
+
+.sticker-item{
+  display:grid;
+  grid-template-columns:90px 1fr;
+  gap:10px;
+  align-items:center;
+  padding:10px;
+  border-bottom:1px solid #222;
+}
+
+.sticker-item:last-child{
+  border-bottom:0;
+}
+
+.sticker-thumb{
+  width:80px;
+  height:80px;
+  object-fit:contain;
+  background:#171717;
+  border-radius:9px;
+}
+
+/* CUSTOM */
+
+.custom-grid{
+  display:grid;
+  grid-template-columns:360px 1fr;
+  gap:18px;
+}
+
+@media(max-width:850px){
+  .custom-grid{
+    grid-template-columns:1fr;
+  }
+}
+
+.preview{
+  position:sticky;
+  top:75px;
+  height:max-content;
+}
+
+.preview-page{
+  position:relative;
+  min-height:600px;
+  overflow:hidden;
+  border-radius:18px;
+  border:1px solid #444;
+  background:#090909;
+  background-size:cover;
+  background-position:center;
+}
+
+.preview-content{
+  position:relative;
+  padding:20px;
+  min-height:600px;
+}
+
+.banner-preview{
+  height:150px;
+  border-radius:12px;
+  background:#181818;
+  background-size:cover;
+  background-position:center;
+  margin-bottom:10px;
+}
+
+.preview-name{
+  font-size:25px;
+  font-weight:900;
+}
+
+.preview-bio{
+  color:#ccc;
+  white-space:pre-wrap;
+  margin-top:7px;
+}
+
+.checkline{
+  display:flex;
+  align-items:center;
+  gap:9px;
+  margin:10px 0;
+}
+
+.checkline input{
+  width:auto;
+  margin:0;
+}
+
+.range-row{
+  display:grid;
+  grid-template-columns:1fr 80px;
+  gap:10px;
+  align-items:center;
+}
+
+.range-row input{
+  margin:0;
+}
+
+.sticker-buttons{
+  display:flex;
+  gap:7px;
+  flex-wrap:wrap;
+}
+
+.sticker-button{
+  font-size:25px;
+  background:#151515;
+  border:1px solid #333;
+  border-radius:10px;
+  padding:7px 10px;
+}
+
+/* SEARCH */
+
+.search-result{
+  display:flex;
+  align-items:center;
+  gap:12px;
+  padding:12px;
+  border-bottom:1px solid #292929;
+}
+
+.search-result img{
+  width:50px;
+  height:50px;
+  border-radius:50%;
+  object-fit:cover;
+}
+
+/* LOADING */
+
+.loading{
+  text-align:center;
+  padding:40px;
+  color:#aaa;
+}
 </style>
 </head>
+
 <body>
-<section id="auth" class="center"><div class="card auth"><div class="logo">BIXSPACE</div><p class="muted">Seu espaço. Sua identidade.</p><div id="loginBox"><h2>Entrar</h2><label>E-mail</label><input id="loginEmail" type="email"><label>Senha</label><input id="loginPassword" type="password"><button class="primary" style="width:100%;margin-top:18px" onclick="login()">Entrar</button><p class="muted">Ainda não tem conta? <button class="link" onclick="showRegister()">Criar conta</button></p></div><div id="registerBox" class="hidden"><h2>Criar conta</h2><label>Username</label><input id="regUsername" maxlength="24" placeholder="bia123"><label>Nome</label><input id="regName" maxlength="60" placeholder="Bia"><label>E-mail</label><input id="regEmail" type="email"><label>Senha</label><input id="regPassword" type="password"><button class="primary" style="width:100%;margin-top:18px" onclick="register()">Criar conta</button><p class="muted">Já tem conta? <button class="link" onclick="showLogin()">Entrar</button></p></div><div id="authMsg" class="msg"></div></div></section>
-<section id="app" class="app hidden"><aside><div class="logo">BIXSPACE</div><nav><button id="homeNav" class="active" onclick="page('home')">⌂ Início</button><button id="searchNav" onclick="page('search')">⌕ Buscar</button><button id="profileNav" onclick="page('profile')">◎ Meu espaço</button><button id="customNav" onclick="page('custom')">✦ Personalizar</button></nav><button class="secondary logout" onclick="logout()">Sair</button></aside><main id="main"></main></section><div id="toast" class="toast hidden"></div>
-<script>
-const SUPABASE_URL='https://lsigxzmpzhfgkqivdifb.supabase.co';
-const SUPABASE_KEY='sb_publishable_3QbWH5v7g__A6jOCsBs7ng_YcmfIYkS';
-const client=window.supabase.createClient(SUPABASE_URL,SUPABASE_KEY);let me=null;
-const esc=s=>String(s??'').replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
-const defaultCustom={background:'#090909',backgroundImage:'',text:'#ffffff',accent:'#ffffff',font:'Arial',radius:18,musicUrl:'',musicTitle:'',stickers:[],interests:[]};
-function toast(t){const e=document.getElementById('toast');e.textContent=t;e.classList.remove('hidden');setTimeout(()=>e.classList.add('hidden'),2200)}
-function avatar(p,small=false){let l=esc((p?.display_name||p?.username||'?').trim().charAt(0).toUpperCase());return `<div class="avatar" style="${small?'width:45px;height:45px;font-size:16px':''}">${p?.avatar_url?`<img src="${esc(p.avatar_url)}" onerror="this.remove()">`:l}</div>`}
-function getCustom(p=me){let c=p?.customization||{};return {...defaultCustom,...c}}
-function styleFor(p=me){const c=getCustom(p);return `background:${esc(c.background)};color:${esc(c.text)};font-family:${esc(c.font)};--accent:${esc(c.accent)};`}
-function applyPageStyle(p=me){document.body.style.background=getCustom(p).background;document.body.style.color=getCustom(p).text;document.body.style.fontFamily=getCustom(p).font||'Arial'}
-function showRegister(){loginBox.classList.add('hidden');registerBox.classList.remove('hidden');authMsg.textContent=''}function showLogin(){registerBox.classList.add('hidden');loginBox.classList.remove('hidden');authMsg.textContent=''}
-async function register(){const username=regUsername.value.trim().toLowerCase(),name=regName.value.trim(),email=regEmail.value.trim(),password=regPassword.value;if(!/^[a-z0-9_.]{3,24}$/.test(username))return authMsg.textContent='Username: 3–24 caracteres, letras, números, _ ou .';if(password.length<6)return authMsg.textContent='A senha precisa ter pelo menos 6 caracteres.';authMsg.textContent='Criando sua conta…';const {data,error}=await client.auth.signUp({email,password});if(error)return authMsg.textContent=error.message;if(data.user){const r=await client.from('profiles').upsert({id:data.user.id,username,display_name:name||username,customization:defaultCustom,interests:[]},{onConflict:'id'});if(r.error)return authMsg.textContent=r.error.message}if(!data.session)return authMsg.textContent='Conta criada! Confira seu e-mail para confirmar a conta.';await loadMe();start()}
-async function login(){authMsg.textContent='Entrando…';const {error}=await client.auth.signInWithPassword({email:loginEmail.value.trim(),password:loginPassword.value});if(error)return authMsg.textContent=error.message;await loadMe();start()}
-async function loadMe(){const {data:{user}}=await client.auth.getUser();if(!user)return;let r=await client.from('profiles').select('*').eq('id',user.id).single();if(r.error){await client.from('profiles').insert({id:user.id,username:'user_'+user.id.slice(0,8),display_name:'Usuário',customization:defaultCustom,interests:[]});r=await client.from('profiles').select('*').eq('id',user.id).single()}me=r.data;applyPageStyle()}
-function start(){auth.classList.add('hidden');app.classList.remove('hidden');page('home')}
-async function logout(){await client.auth.signOut();location.reload()}
-function page(p){document.querySelectorAll('nav button').forEach(b=>b.classList.remove('active'));const map={home:homeNav,search:searchNav,profile:profileNav,custom:customNav};if(map[p])map[p].classList.add('active');({home:homePage,search:searchPage,profile:profilePage,custom:customPage}[p])()}
-async function homePage(){applyPageStyle();const posts=await loadPosts(me.id);main.innerHTML=`<div class="top"><div><h1>Início</h1><p class="muted">Seu espaço no BIXSPACE.</p></div>${avatar(me,true)}</div>${profileCard(me,posts,true)}`}
-function profileCard(p,posts,own=false){const c=getCustom(p), interests=(p.interests||[]).filter(Boolean);let bg=c.backgroundImage?`background-image:url('${esc(c.backgroundImage)}');background-color:${esc(c.background)}`:`background:${esc(c.background)}`;return `<div class="grid"><div><div class="card profile-card" style="${styleFor(p)}"><div class="cover" style="${bg}"></div><div class="profile-head"><div class="avatar">${p.avatar_url?`<img src="${esc(p.avatar_url)}">`:esc((p.display_name||p.username||'?').charAt(0).toUpperCase())}</div><h1>${esc(p.display_name||p.username)}</h1><div class="handle">@${esc(p.username)}</div><p class="bio">${esc(p.bio||'Este perfil ainda não tem uma bio.')}</p>${p.about?`<h3>Sobre mim</h3><p class="bio">${esc(p.about)}</p>`:''}<div class="section-title">Interesses</div><div class="chips">${interests.length?interests.map(x=>`<span class="chip">${esc(x)}</span>`).join(''):'<span class="muted">Nenhum interesse adicionado.</span>'}</div>${c.musicUrl?`<div style="margin-top:20px"><div class="section-title">Música</div><div class="music"><div class="music-icon">🎵</div><div><b>${esc(c.musicTitle||'Minha música')}</b><br><a href="${esc(c.musicUrl)}" target="_blank" rel="noopener" style="color:var(--accent,#fff)">Ouvir música</a></div></div></div>`:''}</div></div><div class="card" style="margin-top:18px"><div class="section-title">Mural</div>${own?`<textarea id="wallText" maxlength="500" placeholder="O que você quer compartilhar?"></textarea><button class="primary" style="margin-top:9px" onclick="addWallPost()">Publicar atualização</button>`:''}<div id="wallList">${renderPosts(posts)}</div></div></div><div><div class="card"><div class="section-title">Decoração</div><div class="sticker-area">${renderStickers(c)}</div></div>${own?`<button class="secondary" style="width:100%;margin-top:12px" onclick="page('custom')">✦ Personalizar meu espaço</button>`:''}</div></div>`}
-function renderStickers(c){return (c.stickers||[]).map(s=>`<span class="sticker" style="left:${Number(s.x)||10}%;top:${Number(s.y)||10}%;font-size:${Number(s.size)||32}px">${esc(s.char)}</span>`).join('')}
-async function loadPosts(profileId){const {data}=await client.from('wall_posts').select('*').eq('profile_id',profileId).order('created_at',{ascending:false}).limit(30);return data||[]}
-function renderPosts(posts){if(!posts.length)return '<div class="empty">Ainda não há atualizações no mural.</div>';return posts.map(x=>`<div class="wall-post"><div>${esc(x.content)}</div><div class="wall-meta">${new Date(x.created_at).toLocaleString('pt-BR')}</div></div>`).join('')}
-async function addWallPost(){const text=wallText.value.trim();if(!text)return toast('Escreva uma atualização.');const {error}=await client.from('wall_posts').insert({profile_id:me.id,content:text});if(error)return toast(error.message);homePage()}
-function searchPage(){main.innerHTML=`<div class="top"><div><h1>Buscar</h1><p class="muted">Encontre pessoas pelo nome ou username.</p></div></div><div class="card"><div class="search"><input id="query" placeholder="Nome ou username..." onkeydown="if(event.key==='Enter')searchUsers()"><button class="secondary" onclick="searchUsers()">Buscar</button></div><div id="results"></div></div>`}
-async function searchUsers(){const q=query.value.trim().replace(/[,%]/g,'');if(!q)return results.innerHTML='<div class="empty">Digite algo para pesquisar.</div>';const {data,error}=await client.from('profiles').select('*').or(`username.ilike.%${q}%,display_name.ilike.%${q}%`).limit(30);if(error)return results.innerHTML=`<div class="empty">${esc(error.message)}</div>`;results.innerHTML=data?.length?data.map(p=>`<div class="row">${avatar(p,true)}<div class="grow"><b>${esc(p.display_name||p.username)}</b><div class="handle">@${esc(p.username)}</div></div><button class="secondary" onclick="viewProfile('${p.id}')">Ver espaço</button></div>`).join(''):'<div class="empty">Nenhum perfil encontrado.</div>'}
-async function viewProfile(id){const {data:p}=await client.from('profiles').select('*').eq('id',id).single();if(!p)return toast('Perfil não encontrado.');const posts=await loadPosts(id);main.innerHTML=`<button class="secondary" onclick="searchPage()">← Voltar</button><div style="margin-top:15px">${profileCard(p,posts,false)}</div>`}
-function profilePage(){main.innerHTML=`<div class="top"><div><h1>Meu espaço</h1><p class="muted">Seu conteúdo no BIXSPACE.</p></div></div>${profileCard(me,[],true)}`;loadPosts(me.id).then(p=>{const e=document.getElementById('wallList');if(e)e.innerHTML=renderPosts(p)})}
-function customPage(){const c=getCustom();const interests=(me.interests||[]).join(', ');main.innerHTML=`<div class="top"><div><h1>Personalizar</h1><p class="muted">Faça seu BIXSPACE ter a sua cara — estilo MySpace.</p></div><button class="primary" onclick="saveCustomization()">Salvar tudo</button></div><div class="card"><div class="editor-grid"><div><label>Cor do fundo</label><input id="cBg" type="color" value="${esc(c.background)}"></div><div><label>Cor do texto</label><input id="cText" type="color" value="${esc(c.text)}"></div><div><label>Cor de destaque</label><input id="cAccent" type="color" value="${esc(c.accent)}"></div><div><label>Fonte</label><select id="cFont"><option>Arial</option><option>Georgia</option><option>Verdana</option><option>Courier New</option><option>Trebuchet MS</option><option>Times New Roman</option></select></div><div class="full"><label>Imagem do fundo / parede — URL</label><input id="cBgImage" value="${esc(c.backgroundImage)}" placeholder="https://..."></div><div><label>Música — título</label><input id="cMusicTitle" value="${esc(c.musicTitle)}" placeholder="Minha música favorita"></div><div><label>Música — link</label><input id="cMusicUrl" value="${esc(c.musicUrl)}" placeholder="Link do Spotify/YouTube/etc."></div><div class="full"><label>Interesses — separados por vírgulas</label><input id="cInterests" value="${esc(interests)}" placeholder="Música, filmes, jogos, moda..."></div><div class="full"><label>Stickers</label><div class="chips" id="stickerChoices">${['⭐','💿','🎀','🦋','🌙','☁️','💗','🖤','✨','🌸','🎧','🍒','🪩','🧸','📺'].map(x=>`<button class="chip" onclick="addSticker('${x}')">${x}</button>`).join('')}</div><div id="stickerEditor" style="margin-top:12px">${(c.stickers||[]).map((s,i)=>`<div class="row"><span style="font-size:25px">${esc(s.char)}</span><input type="number" min="0" max="95" value="${Number(s.x)||10}" onchange="updateSticker(${i},'x',this.value)" style="width:90px"><input type="number" min="0" max="95" value="${Number(s.y)||10}" onchange="updateSticker(${i},'y',this.value)" style="width:90px"><input type="number" min="12" max="100" value="${Number(s.size)||32}" onchange="updateSticker(${i},'size',this.value)" style="width:90px"><button class="secondary danger" onclick="removeSticker(${i})">Remover</button></div>`).join('')}</div></div><div class="full"><label>Prévia</label><div id="preview" class="custom-preview"></div></div></div></div>`;cFont.value=c.font;updatePreview()}
-let editStickers=[];
-function syncStickerState(){const c=getCustom();editStickers=JSON.parse(JSON.stringify(c.stickers||[]))}
-function addSticker(ch){if(!editStickers.length)syncStickerState();editStickers.push({char:ch,x:10+Math.random()*70,y:10+Math.random()*70,size:34});customPage()}
-function updateSticker(i,k,v){if(!editStickers.length)syncStickerState();editStickers[i][k]=Number(v);customPage()}
-function removeSticker(i){if(!editStickers.length)syncStickerState();editStickers.splice(i,1);customPage()}
-function updatePreview(){const e=document.getElementById('preview');if(!e)return;const c=getCustom();e.style.background=c.backgroundImage?`url('${c.backgroundImage}') center/cover, ${c.background}`:c.background;e.style.color=c.text;e.style.fontFamily=c.font;e.innerHTML=`<h2>${esc(me.display_name||me.username)}</h2><p>Prévia do seu espaço ✨</p>${(editStickers.length?editStickers:c.stickers||[]).map(s=>`<span class="sticker" style="left:${s.x}%;top:${s.y}%;font-size:${s.size}px">${esc(s.char)}</span>`).join('')}`}
-async function saveCustomization(){const old=getCustom();const stickers=editStickers.length?editStickers:(old.stickers||[]);const c={background:cBg.value,text:cText.value,accent:cAccent.value,font:cFont.value,backgroundImage:cBgImage.value.trim(),musicTitle:cMusicTitle.value.trim(),musicUrl:cMusicUrl.value.trim(),stickers};const interests=cInterests.value.split(',').map(x=>x.trim()).filter(Boolean).slice(0,30);const {error}=await client.from('profiles').update({customization:c,interests,updated_at:new Date().toISOString()}).eq('id',me.id);if(error)return toast(error.message);me={...me,customization:c,interests};editStickers=[];applyPageStyle();toast('Tudo salvo ✨');profilePage()}
-client.auth.onAuthStateChange(async(_,session)=>{if(session&&!me){await loadMe();start()}});(async()=>{const {data}=await client.auth.getSession();if(data.session){await loadMe();start()}})();
-</script></body></html>
+
+<div id="app"></div>
+
+<div id="toast" class="toast"></div>
+
+<script type="module">
+
+/* =========================================================
+   SUPABASE
+========================================================= */
+
+const SUPABASE_URL =
+'https://lsigxzmpzhfgkqivdifb.supabase.co';
+
+const SUPABASE_KEY =
+'sb_publishable_3QbWH5v7g__A6jOCsBs7ng_YcmfIYkS';
+
+const client =
+window.supabase.createClient(
+  SUPABASE_URL,
+  SUPABASE_KEY
+);
+
+
+/* =========================================================
+   BACKGROUND REMOVAL
+========================================================= */
+
+let removeBackgroundAI = null;
+
+async function loadBackgroundRemoval(){
+
+  if(removeBackgroundAI)
+    return removeBackgroundAI;
+
+  try{
+
+    const module =
+      await import(
+        'https://cdn.jsdelivr.net/npm/@imgly/background-removal@1.5.6/+esm'
+      );
+
+    removeBackgroundAI =
+      module.removeBackground;
+
+    return removeBackgroundAI;
+
+  }catch(error){
+
+    console.error(error);
+
+    toast(
+      'Não consegui carregar a remoção de fundo.'
+    );
+
+    return null;
+  }
+}
+
+
+/* =========================================================
+   DEFAULT CUSTOM
+========================================================= */
+
+const defaultCustom = {
+
+  background:'#090909',
+
+  backgroundImage:'',
+
+  bannerImage:'',
+
+  text:'#ffffff',
+
+  accent:'#ffffff',
+
+  font:'Arial',
+
+  radius:18,
+
+  musicUrl:'',
+
+  musicTitle:'',
+
+  musicAutoplay:false,
+
+  musicVolume:0.5,
+
+  stickers:[],
+
+  photoStickers:[],
+
+  interests:''
+};
+
+
+/* =========================================================
+   STATE
+========================================================= */
+
+let currentUser = null;
+
+let currentProfile = null;
+
+let currentPage = 'home';
+
+let editingCustom = null;
+
+
+/* =========================================================
+   HELPERS
+========================================================= */
+
+function esc(value=''){
+
+  return String(value)
+    .replaceAll('&','&amp;')
+    .replaceAll('<','&lt;')
+    .replaceAll('>','&gt;')
+    .replaceAll('"','&quot;')
+    .replaceAll("'","&#039;");
+}
+
+
+function toast(message){
+
+  const el =
+    document.getElementById('toast');
+
+  el.textContent = message;
+
+  el.style.display='block';
+
+  clearTimeout(window.toastTimer);
+
+  window.toastTimer =
+    setTimeout(()=>{
+      el.style.display='none';
+    },3000);
+}
+
+
+function mergeCustom(custom){
+
+  return {
+    ...defaultCustom,
+    ...(custom || {})
+  };
+}
+
+
+function interestsArray(value){
+
+  if(Array.isArray(value))
+    return value;
+
+  return String(value || '')
+    .split(',')
+    .map(x=>x.trim())
+    .filter(Boolean);
+}
+
+
+/* =========================================================
+   AUTH
+========================================================= */
+
+async function getSession(){
+
+  const {
+    data
+  } = await client.auth.getSession();
+
+  currentUser =
+    data.session?.user || null;
+
+  return currentUser;
+}
+
+
+async function signup(){
+
+  const email =
+    document.getElementById('email').value.trim();
+
+  const password =
+    document.getElementById('password').value;
+
+  const username =
+    document.getElementById('username').value.trim();
+
+  if(!email || !password || !username){
+
+    toast('Preencha tudo.');
+
+    return;
+  }
+
+  const {
+    data,
+    error
+  } =
+    await client.auth.signUp({
+      email,
+      password
+    });
+
+  if(error){
+
+    toast(error.message);
+
+    return;
+  }
+
+  if(data.user){
+
+    await client
+      .from('profiles')
+      .upsert({
+
+        id:data.user.id,
+
+        username,
+
+        display_name:username,
+
+        bio:'',
+
+        about:'',
+
+        avatar_url:'',
+
+        custom:defaultCustom
+
+      });
+
+  }
+
+  toast(
+    'Conta criada! Se aparecer confirmação de email, confirme seu email.'
+  );
+}
+
+
+async function login(){
+
+  const email =
+    document.getElementById('email').value.trim();
+
+  const password =
+    document.getElementById('password').value;
+
+  const {
+    error
+  } =
+    await client.auth.signInWithPassword({
+      email,
+      password
+    });
+
+  if(error){
+
+    toast(error.message);
+
+    return;
+  }
+
+  await start();
+}
+
+
+async function logout(){
+
+  await client.auth.signOut();
+
+  currentUser=null;
+
+  currentProfile=null;
+
+  showAuth();
+}
+
+
+/* =========================================================
+   AUTH SCREEN
+========================================================= */
+
+function showAuth(){
+
+  document.getElementById('app').innerHTML=`
+
+    <div class="auth">
+
+      <div class="card">
+
+        <div class="logo">
+          BIXSPACE
+        </div>
+
+        <p class="small">
+          seu espaço. seu perfil. suas regras.
+        </p>
+
+        <input
+          id="username"
+          placeholder="Nome de usuário"
+        >
+
+        <input
+          id="email"
+          type="email"
+          placeholder="Email"
+        >
+
+        <input
+          id="password"
+          type="password"
+          placeholder="Senha"
+        >
+
+        <div class="row">
+
+          <button
+            class="primary"
+            onclick="login()"
+          >
+            Entrar
+          </button>
+
+          <button
+            class="secondary"
+            onclick="signup()"
+          >
+            Criar conta
+          </button>
+
+        </div>
+
+      </div>
+
+    </div>
+  `;
+}
+
+
+/* =========================================================
+   NAV
+========================================================= */
+
+function nav(){
+
+  return `
+
+  <div class="topbar">
+
+    <div class="logo">
+      BIXSPACE
+    </div>
+
+    <div class="nav">
+
+      <button onclick="go('home')">
+        Início
+      </button>
+
+      <button onclick="go('search')">
+        Buscar
+      </button>
+
+      <button onclick="openMyProfile()">
+        Meu perfil
+      </button>
+
+      <button onclick="go('custom')">
+        Personalizar
+      </button>
+
+      <button onclick="logout()">
+        Sair
+      </button>
+
+    </div>
+
+  </div>
+
+  `;
+}
+
+
+/* =========================================================
+   ROUTING
+========================================================= */
+
+async function go(page){
+
+  currentPage=page;
+
+  if(page==='home')
+    return renderHome();
+
+  if(page==='search')
+    return renderSearch();
+
+  if(page==='custom')
+    return renderCustom();
+
+  if(page==='profile' && currentProfile)
+    return renderProfile(currentProfile);
+}
+
+
+async function openMyProfile(){
+
+  if(!currentUser)
+    return;
+
+  const {
+    data,
+    error
+  } =
+    await client
+      .from('profiles')
+      .select('*')
+      .eq('id',currentUser.id)
+      .single();
+
+  if(error){
+
+    toast(error.message);
+
+    return;
+  }
+
+  currentProfile=data;
+
+  renderProfile(data);
+}
+
+
+/* =========================================================
+   HOME
+========================================================= */
+
+async function renderHome(){
+
+  document.getElementById('app').innerHTML =
+    nav()+
+    `<div class="container">
+       <div class="card">
+         <h1>Bem-vinda ao BIXSPACE ✦</h1>
+         <p>
+           Crie seu perfil, personalize tudo e deixe
+           seu espaço com a sua cara.
+         </p>
+         <button class="primary"
+                 onclick="openMyProfile()">
+           Abrir meu perfil
+         </button>
+       </div>
+    </div>`;
+}
+
+
+/* =========================================================
+   SEARCH
+========================================================= */
+
+async function renderSearch(){
+
+  document.getElementById('app').innerHTML =
+    nav()+
+    `<div class="container">
+
+      <div class="card">
+
+        <h2>Buscar pessoas</h2>
+
+        <input
+          id="searchInput"
+          placeholder="Digite um nome de usuário..."
+          oninput="searchProfiles()"
+        >
+
+        <div id="searchResults"></div>
+
+      </div>
+
+    </div>`;
+}
+
+
+async function searchProfiles(){
+
+  const q =
+    document
+      .getElementById('searchInput')
+      .value
+      .trim();
+
+  if(!q){
+
+    document
+      .getElementById('searchResults')
+      .innerHTML='';
+
+    return;
+  }
+
+  const {
+    data,
+    error
+  } =
+    await client
+      .from('profiles')
+      .select('*')
+      .ilike('username',`%${q}%`)
+      .limit(20);
+
+  if(error){
+
+    toast(error.message);
+
+    return;
+  }
+
+  document
+    .getElementById('searchResults')
+    .innerHTML =
+      data.map(profile=>`
+
+        <div
+          class="search-result"
+          onclick='viewProfile(${JSON.stringify(profile)})'
+          style="cursor:pointer"
+        >
+
+          <img
+            src="${esc(
+              profile.avatar_url ||
+              'https://via.placeholder.com/100'
+            )}"
+          >
+
+          <div>
+
+            <strong>
+              ${esc(
+                profile.display_name ||
+                profile.username
+              )}
+            </strong>
+
+            <div class="small">
+              @${esc(profile.username)}
+            </div>
+
+          </div>
+
+        </div>
+
+      `).join('');
+}
+
+
+function viewProfile(profile){
+
+  currentProfile=profile;
+
+  renderProfile(profile);
+}
+
+
+/* =========================================================
+   PROFILE
+========================================================= */
+
+async function renderProfile(profile){
+
+  const custom =
+    mergeCustom(profile.custom);
+
+  document.body.style.fontFamily =
+    custom.font;
+
+  document.body.style.background =
+    custom.backgroundImage
+      ? `url("${custom.backgroundImage}")`
+      : custom.background;
+
+  const interests =
+    interestsArray(
+      custom.interests
+    );
+
+  const {
+    data:posts
+  } =
+    await client
+      .from('wall_posts')
+      .select('*')
+      .eq('profile_id',profile.id)
+      .order('created_at',{
+        ascending:false
+      })
+      .limit(50);
+
+  document.getElementById('app').innerHTML =
+    nav()+`
+
+    <div class="container">
+
+      <div
+        class="profile"
+        style="
+          border-radius:${custom.radius}px;
+          color:${custom.text};
+        "
+      >
+
+        <div
+          class="profile-banner"
+          style="
+            background-image:
+              url('${esc(
+                custom.bannerImage || ''
+              )}');
+          "
+        >
+
+          <div class="profile-overlay"></div>
+
+        </div>
+
+        <div class="profile-main">
+
+          <img
+            class="avatar"
+            src="${esc(
+              profile.avatar_url ||
+              'https://via.placeholder.com/150'
+            )}"
+          >
+
+          <div class="profile-name">
+            ${esc(
+              profile.display_name ||
+              profile.username
+            )}
+          </div>
+
+          <div class="small">
+            @${esc(profile.username)}
+          </div>
+
+          <div class="profile-bio">
+            ${esc(profile.bio || '')}
+          </div>
+
+          ${
+            currentUser &&
+            currentUser.id===profile.id
+            ?
+            `
+            <div style="margin-top:10px">
+              <button
+                class="secondary"
+                onclick="go('custom')"
+              >
+                ✦ Editar meu perfil
+              </button>
+            </div>
+            `
+            :
+            ''
+          }
+
+          <div class="section">
+
+            <div class="section-title">
+              Sobre mim
+            </div>
+
+            <div>
+              ${esc(profile.about || '')}
+            </div>
+
+          </div>
+
+          ${
+            interests.length
+            ?
+            `
+            <div class="section">
+
+              <div class="section-title">
+                Interesses
+              </div>
+
+              <div class="interests">
+
+                ${
+                  interests
+                    .map(x=>
+                      `<span class="interest">
+                        ${esc(x)}
+                      </span>`
+                    )
+                    .join('')
+                }
+
+              </div>
+
+            </div>
+            `
+            :
+            ''
+          }
+
+          ${
+            custom.musicUrl
+            ?
+            `
+            <div class="section">
+
+              <div class="section-title">
+                🎵 ${esc(
+                  custom.musicTitle ||
+                  'Música'
+                )}
+              </div>
+
+              <audio
+                class="profile-music"
+                controls
+                ${
+                  custom.musicAutoplay
+                    ? 'autoplay'
+                    : ''
+                }
+                src="${esc(custom.musicUrl)}"
+              ></audio>
+
+              <input
+                type="range"
+                min="0"
+                max="1"
+                step="0.01"
+                value="${custom.musicVolume}"
+                oninput="
+                  this.previousElementSibling.volume=this.value
+                "
+              >
+
+            </div>
+            `
+            :
+            ''
+          }
+
+          ${
+            posts?.length
+            ?
+            `
+            <div class="section">
+
+              <div class="section-title">
+                Mural
+              </div>
+
+              ${
+                posts.map(post=>`
+
+                  <div class="wall-post">
+
+                    <div class="wall-author">
+                      ${esc(
+                        post.author_name ||
+                        'visitante'
+                      )}
+                    </div>
+
+                    <div>
+                      ${esc(post.content)}
+                    </div>
+
+                    <div class="wall-date">
+                      ${new Date(
+                        post.created_at
+                      ).toLocaleString('pt-BR')}
+                    </div>
+
+                  </div>
+
+                `).join('')
+              }
+
+            </div>
+            `
+            :
+            ''
+          }
+
+          ${
+            currentUser
+            ?
+            `
+            <div class="section">
+
+              <div class="section-title">
+                Deixar uma mensagem
+              </div>
+
+              <textarea
+                id="wallMessage"
+                placeholder="Escreva algo..."
+              ></textarea>
+
+              <button
+                class="primary"
+                onclick="postWall('${profile.id}')"
+              >
+                Publicar
+              </button>
+
+            </div>
+            `
+            :
+            ''
+          }
+
+          ${
+            custom.photoStickers?.length ||
+            custom.stickers?.length
+            ?
+            `
+            <div class="section">
+
+              <div class="decoration-area"
+                   style="
+                     background:
+                     transparent;
+                   ">
+
+                ${renderDecorations(custom)}
+
+              </div>
+
+            </div>
+            `
+            :
+            ''
+          }
+
+        </div>
+
+      </div>
+
+    </div>
+  `;
+
+  setupProfileAudio(custom);
+
+}
+
+
+/* =========================================================
+   DECORATIONS
+========================================================= */
+
+function renderDecorations(custom){
+
+  let html='';
+
+  (custom.stickers || [])
+    .forEach(sticker=>{
+
+      html+=`
+
+        <div
+          class="editor-sticker"
+          style="
+            left:${sticker.x || 50}%;
+            top:${sticker.y || 50}%;
+            width:${sticker.width || 60}px;
+            height:${sticker.height || 60}px;
+          "
+        >
+
+          <img
+            src="${esc(sticker.image)}"
+          >
+
+        </div>
+
+      `;
+    });
+
+
+  (custom.photoStickers || [])
+    .forEach(sticker=>{
+
+      const image =
+        sticker.removeBackground &&
+        sticker.processedImage
+          ?
+          sticker.processedImage
+          :
+          sticker.image;
+
+      html+=`
+
+        <div
+          class="photo-sticker"
+          style="
+            left:${sticker.x || 50}%;
+            top:${sticker.y || 50}%;
+            width:${sticker.width || 150}px;
+            height:${sticker.height || 150}px;
+          "
+        >
+
+          <img
+            src="${esc(image)}"
+          >
+
+        </div>
+
+      `;
+    });
+
+  return html;
+}
+
+
+function setupProfileAudio(custom){
+
+  const audio =
+    document.querySelector('.profile-music');
+
+  if(!audio)
+    return;
+
+  audio.volume =
+    Number(custom.musicVolume ?? .5);
+
+  if(custom.musicAutoplay){
+
+    audio.play().catch(()=>{
+      /*
+        Navegadores podem bloquear autoplay
+        com som. Nesse caso o visitante
+        precisa apertar Play.
+      */
+    });
+  }
+}
+
+
+/* =========================================================
+   WALL
+========================================================= */
+
+async function postWall(profileId){
+
+  const content =
+    document
+      .getElementById('wallMessage')
+      .value
+      .trim();
+
+  if(!content)
+    return;
+
+  const {
+    error
+  } =
+    await client
+      .from('wall_posts')
+      .insert({
+
+        profile_id:profileId,
+
+        author_id:currentUser.id,
+
+        author_name:
+          currentProfile?.display_name ||
+          currentUser.email?.split('@')[0] ||
+          'visitante',
+
+        content
+
+      });
+
+  if(error){
+
+    toast(error.message);
+
+    return;
+  }
+
+  toast('Mensagem publicada!');
+
+  openMyProfile();
+}
+
+
+/* =========================================================
+   CUSTOMIZATION
+========================================================= */
+
+async function renderCustom(){
+
+  const {
+    data:profile,
+    error
+  } =
+    await client
+      .from('profiles')
+      .select('*')
+      .eq('id',currentUser.id)
+      .single();
+
+  if(error){
+
+    toast(error.message);
+
+    return;
+  }
+
+  currentProfile=profile;
+
+  editingCustom =
+    mergeCustom(profile.custom);
+
+  document.getElementById('app').innerHTML =
+    nav()+`
+
+    <div class="container">
+
+      <div class="custom-grid">
+
+        <!-- EDITOR -->
+
+        <div>
+
+          <div class="card">
+
+            <h2>✦ Personalizar</h2>
+
+            <p class="small">
+              Aqui você controla praticamente tudo
+              do seu BIXSPACE.
+            </p>
+
+            <label>
+              Nome exibido
+            </label>
+
+            <input
+              id="cDisplayName"
+              value="${esc(
+                profile.display_name || ''
+              )}"
+            >
+
+            <label>
+              Bio
+            </label>
+
+            <textarea
+              id="cBio"
+              placeholder="Uma frase, uma descrição, qualquer coisa..."
+            >${esc(profile.bio || '')}</textarea>
+
+            <label>
+              Sobre mim
+            </label>
+
+            <textarea
+              id="cAbout"
+              placeholder="Conte mais sobre você..."
+            >${esc(profile.about || '')}</textarea>
+
+          </div>
+
+
+          <!-- CORES -->
+
+          <div class="card">
+
+            <h3>🎨 Aparência</h3>
+
+            <label>
+              Cor do fundo
+            </label>
+
+            <input
+              type="color"
+              id="cBackground"
+              value="${editingCustom.background}"
+              oninput="updatePreview()"
+            >
+
+            <label>
+              Cor do texto
+            </label>
+
+            <input
+              type="color"
+              id="cText"
+              value="${editingCustom.text}"
+              oninput="updatePreview()"
+            >
+
+            <label>
+              Cor de destaque
+            </label>
+
+            <input
+              type="color"
+              id="cAccent"
+              value="${editingCustom.accent}"
+              oninput="updatePreview()"
+            >
+
+            <label>
+              Fonte
+            </label>
+
+            <select
+              id="cFont"
+              onchange="updatePreview()"
+            >
+
+              <option
+                ${
+                  editingCustom.font==='Arial'
+                  ? 'selected'
+                  : ''
+                }
+              >
+                Arial
+              </option>
+
+              <option
+                ${
+                  editingCustom.font==='Georgia'
+                  ? 'selected'
+                  : ''
+                }
+              >
+                Georgia
+              </option>
+
+              <option
+                ${
+                  editingCustom.font==='Courier New'
+                  ? 'selected'
+                  : ''
+                }
+              >
+                Courier New
+              </option>
+
+              <option
+                ${
+                  editingCustom.font==='Verdana'
+                  ? 'selected'
+                  : ''
+                }
+              >
+                Verdana
+              </option>
+
+              <option
+                ${
+                  editingCustom.font==='Trebuchet MS'
+                  ? 'selected'
+                  : ''
+                }
+              >
+                Trebuchet MS
+              </option>
+
+            </select>
+
+            <label>
+              Arredondamento
+            </label>
+
+            <div class="range-row">
+
+              <input
+                type="range"
+                min="0"
+                max="40"
+                value="${editingCustom.radius}"
+                id="cRadius"
+                oninput="updatePreview()"
+              >
+
+              <span id="radiusValue">
+                ${editingCustom.radius}px
+              </span>
+
+            </div>
+
+          </div>
+
+
+          <!-- IMAGENS -->
+
+          <div class="card">
+
+            <h3>🖼️ Imagens</h3>
+
+            <label>
+              Background da página
+            </label>
+
+            <input
+              type="file"
+              accept="image/*"
+              onchange="uploadBackground(this)"
+            >
+
+            <input
+              id="cBackgroundUrl"
+              placeholder="ou cole uma URL de imagem"
+              value="${esc(
+                editingCustom.backgroundImage
+              )}"
+              oninput="updatePreview()"
+            >
+
+            <label>
+              Banner
+            </label>
+
+            <input
+              type="file"
+              accept="image/*"
+              onchange="uploadBanner(this)"
+            >
+
+            <input
+              id="cBannerUrl"
+              placeholder="ou cole uma URL de banner"
+              value="${esc(
+                editingCustom.bannerImage
+              )}"
+              oninput="updatePreview()"
+            >
+
+          </div>
+
+
+          <!-- INTERESSES -->
+
+          <div class="card">
+
+            <h3>💿 Interesses</h3>
+
+            <input
+              id="cInterests"
+              value="${esc(
+                interestsArray(
+                  editingCustom.interests
+                ).join(', ')
+              )}"
+              placeholder="música, filmes, jogos, moda..."
+            >
+
+            <p class="small">
+              Separe os interesses por vírgulas.
+            </p>
+
+          </div>
+
+
+          <!-- STICKERS -->
+
+          <div class="card">
+
+            <h3>🎀 Stickers</h3>
+
+            <div class="sticker-buttons">
+
+              <button
+                class="sticker-button"
+                onclick="addEmojiSticker('★')"
+              >
+                ★
+              </button>
+
+              <button
+                class="sticker-button"
+                onclick="addEmojiSticker('♡')"
+              >
+                ♡
+              </button>
+
+              <button
+                class="sticker-button"
+                onclick="addEmojiSticker('✦')"
+              >
+                ✦
+              </button>
+
+              <button
+                class="sticker-button"
+                onclick="addEmojiSticker('☁')"
+              >
+                ☁
+              </button>
+
+              <button
+                class="sticker-button"
+                onclick="addEmojiSticker('☆')"
+              >
+                ☆
+              </button>
+
+              <button
+                class="sticker-button"
+                onclick="addEmojiSticker('☾')"
+              >
+                ☾
+              </button>
+
+              <button
+                class="sticker-button"
+                onclick="addEmojiSticker('✿')"
+              >
+                ✿
+              </button>
+
+              <button
+                class="sticker-button"
+                onclick="addEmojiSticker('♡')"
+              >
+                💿
+              </button>
+
+            </div>
+
+          </div>
+
+
+          <!-- PHOTO STICKERS -->
+
+          <div class="card">
+
+            <h3>
+              📸 Photo-stickers
+            </h3>
+
+            <p class="small">
+              Você pode colocar até 5 imagens soltas
+              no seu perfil.
+            </p>
+
+            <input
+              type="file"
+              id="photoStickerInput"
+              accept="image/*"
+              onchange="addPhotoSticker(this)"
+            >
+
+            <div
+              id="photoStickerControls"
+              class="sticker-controls"
+            ></div>
+
+          </div>
+
+
+          <!-- AUDIO -->
+
+          <div class="card">
+
+            <h3>🎵 Música</h3>
+
+            <label>
+              Arquivo de áudio
+            </label>
+
+            <input
+              type="file"
+              accept="audio/*"
+              onchange="uploadMusic(this)"
+            >
+
+            <label>
+              Ou URL do áudio
+            </label>
+
+            <input
+              id="cMusicUrl"
+              value="${esc(
+                editingCustom.musicUrl
+              )}"
+              placeholder="https://..."
+              oninput="updatePreview()"
+            >
+
+            <label>
+              Nome da música
+            </label>
+
+            <input
+              id="cMusicTitle"
+              value="${esc(
+                editingCustom.musicTitle
+              )}"
+              oninput="updatePreview()"
+            >
+
+            <div class="checkline">
+
+              <input
+                type="checkbox"
+                id="cMusicAutoplay"
+                ${
+                  editingCustom.musicAutoplay
+                    ? 'checked'
+                    : ''
+                }
+              >
+
+              <label for="cMusicAutoplay">
+                Tentar tocar automaticamente ao entrar
+              </label>
+
+            </div>
+
+            <label>
+              Volume
+            </label>
+
+            <div class="range-row">
+
+              <input
+                type="range"
+                min="0"
+                max="1"
+                step=".01"
+                id="cMusicVolume"
+                value="${editingCustom.musicVolume}"
+                oninput="updatePreview()"
+              >
+
+              <span id="musicVolumeValue">
+                ${Math.round(
+                  editingCustom.musicVolume*100
+                )}%
+              </span>
+
+            </div>
+
+          </div>
+
+
+          <button
+            class="primary"
+            style="width:100%;font-size:16px"
+            onclick="saveCustomization()"
+          >
+            💾 SALVAR MEU BIXSPACE
+          </button>
+
+        </div>
+
+
+        <!-- PREVIEW -->
+
+        <div class="preview">
+
+          <div class="card">
+
+            <h3>
+              👀 Preview
+            </h3>
+
+            <div id="previewArea"></div>
+
+          </div>
+
+        </div>
+
+      </div>
+
+    </div>
+  `;
+
+  updatePreview();
+
+}
+
+
+/* =========================================================
+   PREVIEW
+========================================================= */
+
+function readEditor(){
+
+  const radius =
+    Number(
+      document.getElementById('cRadius')?.value
+      || editingCustom.radius
+    );
+
+  const custom = {
+
+    background:
+      document.getElementById(
+        'cBackground'
+      )?.value ||
+      editingCustom.background,
+
+    backgroundImage:
+      document.getElementById(
+        'cBackgroundUrl'
+      )?.value ||
+      '',
+
+    bannerImage:
+      document.getElementById(
+        'cBannerUrl'
+      )?.value ||
+      '',
+
+    text:
+      document.getElementById(
+        'cText'
+      )?.value ||
+      '#fff',
+
+    accent:
+      document.getElementById(
+        'cAccent'
+      )?.value ||
+      '#fff',
+
+    font:
+      document.getElementById(
+        'cFont'
+      )?.value ||
+      'Arial',
+
+    radius,
+
+    musicUrl:
+      document.getElementById(
+        'cMusicUrl'
+      )?.value ||
+      '',
+
+    musicTitle:
+      document.getElementById(
+        'cMusicTitle'
+      )?.value ||
+      '',
+
+    musicAutoplay:
+      document.getElementById(
+        'cMusicAutoplay'
+      )?.checked ||
+      false,
+
+    musicVolume:
+      Number(
+        document.getElementById(
+          'cMusicVolume'
+        )?.value ||
+        .5
+      ),
+
+    interests:
+      document.getElementById(
+        'cInterests'
+      )?.value ||
+      '',
+
+    stickers:
+      editingCustom.stickers || [],
+
+    photoStickers:
+      editingCustom.photoStickers || []
+
+  };
+
+  return custom;
+}
+
+
+function updatePreview(){
+
+  const custom =
+    readEditor();
+
+  editingCustom = {
+    ...editingCustom,
+    ...custom
+  };
+
+  const displayName =
+    document.getElementById(
+      'cDisplayName'
+    )?.value ||
+    currentProfile?.display_name ||
+    'Seu nome';
+
+  const bio =
+    document.getElementById(
+      'cBio'
+    )?.value ||
+    '';
+
+  const interests =
+    interestsArray(
+      custom.interests
+    );
+
+  const decorations =
+    renderDecorations(
+      custom
+    );
+
+  document.getElementById(
+    'previewArea'
+  ).innerHTML=`
+
+    <div
+      class="preview-page"
+      style="
+        background-color:${custom.background};
+        background-image:
+          ${custom.backgroundImage
+            ? `url('${esc(custom.backgroundImage)}')`
+            : 'none'};
+        font-family:${esc(custom.font)};
+        color:${custom.text};
+        border-radius:${custom.radius}px;
+      "
+    >
+
+      <div class="preview-content">
+
+        <div
+          class="banner-preview"
+          style="
+            background-image:
+              ${
+                custom.bannerImage
+                ?
+                `url('${esc(custom.bannerImage)}')`
+                :
+                'none'
+              };
+          "
+        ></div>
+
+        <div
+          class="preview-name"
+          style="color:${custom.accent}"
+        >
+          ${esc(displayName)}
+        </div>
+
+        <div class="preview-bio">
+          ${esc(bio)}
+        </div>
+
+        ${
+          interests.length
+          ?
+          `
+          <div
+            class="interests"
+            style="margin-top:10px"
+          >
+            ${
+              interests.map(x=>
+                `<span class="interest">
+                  ${esc(x)}
+                </span>`
+              ).join('')
+            }
+          </div>
+          `
+          :
+          ''
+        }
+
+        ${
+          custom.musicUrl
+          ?
+          `
+          <div style="margin-top:20px">
+
+            <div>
+              🎵 ${esc(
+                custom.musicTitle ||
+                'Música'
+              )}
+            </div>
+
+            <audio
+              controls
+              class="profile-music"
+              src="${esc(custom.musicUrl)}"
+              style="margin-top:8px"
+            ></audio>
+
+          </div>
+          `
+          :
+          ''
+        }
+
+        <div
+          class="decoration-area"
+          id="previewDecorationArea"
+          style="
+            margin-top:20px;
+            min-height:350px;
+          "
+        >
+          ${decorations}
+        </div>
+
+      </div>
+
+    </div>
+  `;
+
+  const radiusValue =
+    document.getElementById(
+      'radiusValue'
+    );
+
+  if(radiusValue)
+    radiusValue.textContent =
+      `${custom.radius}px`;
+
+  const volumeValue =
+    document.getElementById(
+      'musicVolumeValue'
+    );
+
+  if(volumeValue)
+    volumeValue.textContent =
+      `${Math.round(custom.musicVolume*100)}%`;
+
+  renderPhotoStickerControls();
+
+  enableDragging();
+
+}
+
+
+/* =========================================================
+   EMOJI STICKERS
+========================================================= */
+
+function addEmojiSticker(emoji){
+
+  editingCustom.stickers.push({
+
+    image:
+      'data:image/svg+xml;charset=utf-8,'+
+      encodeURIComponent(`
+        <svg xmlns="http://www.w3.org/2000/svg"
+             width="100"
+             height="100">
+          <text
+            x="50"
+            y="70"
+            text-anchor="middle"
+            font-size="70"
+          >${emoji}</text>
+        </svg>
+      `),
+
+    x:
+      20+
+      Math.random()*60,
+
+    y:
+      20+
+      Math.random()*50,
+
+    width:70,
+
+    height:70
+
+  });
+
+  updatePreview();
+}
+
+
+/* =========================================================
+   PHOTO STICKERS
+========================================================= */
+
+async function addPhotoSticker(input){
+
+  const file =
+    input.files?.[0];
+
+  if(!file)
+    return;
+
+  if(
+    editingCustom.photoStickers.length >= 5
+  ){
+
+    toast(
+      'Você já tem 5 photo-stickers.'
+    );
+
+    input.value='';
+
+    return;
+  }
+
+  toast('Enviando imagem...');
+
+  try{
+
+    const url =
+      await uploadFile(
+        'bix-images',
+        file,
+        'stickers'
+      );
+
+    editingCustom.photoStickers.push({
+
+      image:url,
+
+      processedImage:'',
+
+      removeBackground:false,
+
+      x:
+        20+
+        Math.random()*50,
+
+      y:
+        20+
+        Math.random()*45,
+
+      width:150,
+
+      height:150
+
+    });
+
+    input.value='';
+
+    updatePreview();
+
+    toast(
+      'Photo-sticker adicionado!'
+    );
+
+  }catch(error){
+
+    console.error(error);
+
+    toast(error.message);
+
+  }
+}
+
+
+function renderPhotoStickerControls(){
+
+  const el =
+    document.getElementById(
+      'photoStickerControls'
+    );
+
+  if(!el)
+    return;
+
+  if(!editingCustom.photoStickers.length){
+
+    el.innerHTML=
+      `<span class="small">
+        Nenhum photo-sticker ainda.
+      </span>`;
+
+    return;
+  }
+
+  el.innerHTML =
+    editingCustom.photoStickers
+      .map((sticker,index)=>`
+
+        <div class="sticker-item">
+
+          <img
+            class="sticker-thumb"
+            src="${esc(
+              sticker.removeBackground &&
+              sticker.processedImage
+                ?
+                sticker.processedImage
+                :
+                sticker.image
+            )}"
+          >
+
+          <div>
+
+            <strong>
+              Foto ${index+1}
+            </strong>
+
+            <div class="checkline">
+
+              <input
+                type="checkbox"
+                ${
+                  sticker.removeBackground
+                    ? 'checked'
+                    : ''
+                }
+                onchange="
+                  toggleBackgroundRemoval(
+                    ${index},
+                    this.checked
+                  )
+                "
+              >
+
+              <span>
+                Remover fundo
+                ${
+                  sticker.removeBackground
+                    ? 'ON'
+                    : 'OFF'
+                }
+              </span>
+
+            </div>
+
+            <label>
+              Tamanho
+            </label>
+
+            <input
+              type="range"
+              min="50"
+              max="400"
+              value="${sticker.width}"
+              oninput="
+                resizePhotoSticker(
+                  ${index},
+                  this.value
+                )
+              "
+            >
+
+            <button
+              class="danger"
+              onclick="
+                removePhotoSticker(${index})
+              "
+            >
+              Remover
+            </button>
+
+          </div>
+
+        </div>
+
+      `)
+      .join('');
+}
+
+
+/* =========================================================
+   REAL BACKGROUND REMOVAL
+========================================================= */
+
+async function toggleBackgroundRemoval(
+  index,
+  enabled
+){
+
+  const sticker =
+    editingCustom.photoStickers[index];
+
+  if(!sticker)
+    return;
+
+  if(!enabled){
+
+    sticker.removeBackground=false;
+
+    updatePreview();
+
+    return;
+  }
+
+  if(sticker.processedImage){
+
+    sticker.removeBackground=true;
+
+    updatePreview();
+
+    return;
+  }
+
+  toast(
+    'Removendo o fundo... isso pode demorar um pouco na primeira vez.'
+  );
+
+  try{
+
+    const removeBackground =
+      await loadBackgroundRemoval();
+
+    if(!removeBackground)
+      return;
+
+    const response =
+      await fetch(
+        sticker.image
+      );
+
+    const blob =
+      await response.blob();
+
+    const result =
+      await removeBackground(
+        blob,
+        {
+          output:{
+            format:'image/png',
+            quality:.9
+          }
+        }
+      );
+
+    const processedFile =
+      new File(
+        [result],
+        `sticker-${Date.now()}.png`,
+        {
+          type:'image/png'
+        }
+      );
+
+    const processedUrl =
+      await uploadFile(
+        'bix-images',
+        processedFile,
+        'stickers-processed'
+      );
+
+    sticker.processedImage =
+      processedUrl;
+
+    sticker.removeBackground=true;
+
+    updatePreview();
+
+    toast(
+      'Fundo removido! ✨'
+    );
+
+  }catch(error){
+
+    console.error(error);
+
+    sticker.removeBackground=false;
+
+    updatePreview();
+
+    toast(
+      'Não foi possível remover o fundo.'
+    );
+  }
+}
+
+
+/* =========================================================
+   RESIZE
+========================================================= */
+
+function resizePhotoSticker(
+  index,
+  value
+){
+
+  const sticker =
+    editingCustom.photoStickers[index];
+
+  if(!sticker)
+    return;
+
+  sticker.width =
+    Number(value);
+
+  sticker.height =
+    Number(value);
+
+  updatePreview();
+}
+
+
+function removePhotoSticker(index){
+
+  editingCustom.photoStickers
+    .splice(index,1);
+
+  updatePreview();
+}
+
+
+/* =========================================================
+   DRAGGING
+========================================================= */
+
+function enableDragging(){
+
+  const area =
+    document.getElementById(
+      'previewDecorationArea'
+    );
+
+  if(!area)
+    return;
+
+  const elements =
+    area.querySelectorAll(
+      '.photo-sticker,.editor-sticker'
+    );
+
+  elements.forEach((element)=>{
+
+    let dragging=false;
+
+    let startX=0;
+    let startY=0;
+
+    let originalX=0;
+    let originalY=0;
+
+    element.addEventListener(
+      'pointerdown',
+      event=>{
+
+        dragging=true;
+
+        element.setPointerCapture(
+          event.pointerId
+        );
+
+        startX=event.clientX;
+        startY=event.clientY;
+
+        originalX =
+          parseFloat(
+            element.style.left
+          ) || 50;
+
+        originalY =
+          parseFloat(
+            element.style.top
+          ) || 50;
+
+        event.preventDefault();
+      }
+    );
+
+    element.addEventListener(
+      'pointermove',
+      event=>{
+
+        if(!dragging)
+          return;
+
+        const rect =
+          area.getBoundingClientRect();
+
+        const dx =
+          (
+            event.clientX-startX
+          ) /
+          rect.width *
+          100;
+
+        const dy =
+          (
+            event.clientY-startY
+          ) /
+          rect.height *
+          100;
+
+        const newX =
+          Math.max(
+            0,
+            Math.min(
+              95,
+              originalX+dx
+            )
+          );
+
+        const newY =
+          Math.max(
+            0,
+            Math.min(
+              95,
+              originalY+dy
+            )
+          );
+
+        element.style.left =
+          newX+'%';
+
+        element.style.top =
+          newY+'%';
+
+      }
+    );
+
+    element.addEventListener(
+      'pointerup',
+      event=>{
+
+        if(!dragging)
+          return;
+
+        dragging=false;
+
+        const rect =
+          area.getBoundingClientRect();
+
+        const x =
+          parseFloat(
+            element.style.left
+          );
+
+        const y =
+          parseFloat(
+            element.style.top
+          );
+
+        const photoElements =
+          [
+            ...area.querySelectorAll(
+              '.photo-sticker'
+            )
+          ];
+
+        const photoIndex =
+          photoElements.indexOf(
+            element
+          );
+
+        if(photoIndex>=0){
+
+          editingCustom
+            .photoStickers[
+              photoIndex
+            ].x=x;
+
+          editingCustom
+            .photoStickers[
+              photoIndex
+            ].y=y;
+
+        }else{
+
+          const emojiElements =
+            [
+              ...area.querySelectorAll(
+                '.editor-sticker'
+              )
+            ];
+
+          const emojiIndex =
+            emojiElements.indexOf(
+              element
+            );
+
+          if(emojiIndex>=0){
+
+            editingCustom
+              .stickers[
+                emojiIndex
+              ].x=x;
+
+            editingCustom
+              .stickers[
+                emojiIndex
+              ].y=y;
+
+          }
+        }
+      }
+    );
+
+  });
+}
+
+
+/* =========================================================
+   FILE UPLOAD
+========================================================= */
+
+async function uploadFile(
+  bucket,
+  file,
+  folder
+){
+
+  if(!currentUser)
+    throw new Error(
+      'Você precisa estar logada.'
+    );
+
+  const cleanName =
+    file.name
+      .replace(
+        /[^a-zA-Z0-9._-]/g,
+        '_'
+      );
+
+  const path =
+    `${currentUser.id}/${folder}/${Date.now()}-${cleanName}`;
+
+  const {
+    error
+  } =
+    await client
+      .storage
+      .from(bucket)
+      .upload(
+        path,
+        file,
+        {
+          upsert:false,
+
+          cacheControl:'3600',
+
+          contentType:
+            file.type ||
+            undefined
+        }
+      );
+
+  if(error)
+    throw error;
+
+  const {
+    data
+  } =
+    client
+      .storage
+      .from(bucket)
+      .getPublicUrl(path);
+
+  return data.publicUrl;
+}
+
+
+/* =========================================================
+   BACKGROUND UPLOAD
+========================================================= */
+
+async function uploadBackground(input){
+
+  const file =
+    input.files?.[0];
+
+  if(!file)
+    return;
+
+  try{
+
+    toast('Enviando background...');
+
+    const url =
+      await uploadFile(
+        'bix-images',
+        file,
+        'backgrounds'
+      );
+
+    document
+      .getElementById(
+        'cBackgroundUrl'
+      )
+      .value=url;
+
+    editingCustom.backgroundImage=url;
+
+    updatePreview();
+
+    toast(
+      'Background adicionado!'
+    );
+
+  }catch(error){
+
+    toast(error.message);
+
+  }
+}
+
+
+/* =========================================================
+   BANNER UPLOAD
+========================================================= */
+
+async function uploadBanner(input){
+
+  const file =
+    input.files?.[0];
+
+  if(!file)
+    return;
+
+  try{
+
+    toast('Enviando banner...');
+
+    const url =
+      await uploadFile(
+        'bix-images',
+        file,
+        'banners'
+      );
+
+    document
+      .getElementById(
+        'cBannerUrl'
+      )
+      .value=url;
+
+    editingCustom.bannerImage=url;
+
+    updatePreview();
+
+    toast(
+      'Banner adicionado!'
+    );
+
+  }catch(error){
+
+    toast(error.message);
+
+  }
+}
+
+
+/* =========================================================
+   AUDIO UPLOAD
+========================================================= */
+
+async function uploadMusic(input){
+
+  const file =
+    input.files?.[0];
+
+  if(!file)
+    return;
+
+  try{
+
+    toast(
+      'Enviando áudio...'
+    );
+
+    const url =
+      await uploadFile(
+        'bix-audio',
+        file,
+        'music'
+      );
+
+    document
+      .getElementById(
+        'cMusicUrl'
+      )
+      .value=url;
+
+    editingCustom.musicUrl=url;
+
+    updatePreview();
+
+    toast(
+      'Música adicionada!'
+    );
+
+  }catch(error){
+
+    toast(error.message);
+
+  }
+}
+
+
+/* =========================================================
+   SAVE
+========================================================= */
+
+async function saveCustomization(){
+
+  const custom =
+    readEditor();
+
+  const displayName =
+    document
+      .getElementById(
+        'cDisplayName'
+      )
+      .value
+      .trim();
+
+  const bio =
+    document
+      .getElementById(
+        'cBio'
+      )
+      .value;
+
+  const about =
+    document
+      .getElementById(
+        'cAbout'
+      )
+      .value;
+
+  const {
+    error
+  } =
+    await client
+      .from('profiles')
+      .update({
+
+        display_name:
+          displayName,
+
+        bio:
+          bio,
+
+        about:
+          about,
+
+        custom:
+          custom
+
+      })
+      .eq(
+        'id',
+        currentUser.id
+      );
+
+  if(error){
+
+    console.error(error);
+
+    toast(
+      'Erro ao salvar: '+
+      error.message
+    );
+
+    return;
+  }
+
+  currentProfile={
+    ...currentProfile,
+
+    display_name:displayName,
+
+    bio,
+
+    about,
+
+    custom
+
+  };
+
+  editingCustom=custom;
+
+  toast(
+    '✨ Seu BIXSPACE foi salvo!'
+  );
+
+}
+
+
+/* =========================================================
+   START
+========================================================= */
+
+async function start(){
+
+  const user =
+    await getSession();
+
+  if(!user){
+
+    showAuth();
+
+    return;
+  }
+
+  await renderHome();
+}
+
+
+window.login=login;
+window.signup=signup;
+window.logout=logout;
+
+window.go=go;
+window.openMyProfile=openMyProfile;
+
+window.searchProfiles=searchProfiles;
+window.viewProfile=viewProfile;
+
+window.postWall=postWall;
+
+window.renderCustom=renderCustom;
+window.saveCustomization=saveCustomization;
+
+window.updatePreview=updatePreview;
+
+window.addEmojiSticker=
+  addEmojiSticker;
+
+window.addPhotoSticker=
+  addPhotoSticker;
+
+window.toggleBackgroundRemoval=
+  toggleBackgroundRemoval;
+
+window.resizePhotoSticker=
+  resizePhotoSticker;
+
+window.removePhotoSticker=
+  removePhotoSticker;
+
+window.uploadBackground=
+  uploadBackground;
+
+window.uploadBanner=
+  uploadBanner;
+
+window.uploadMusic=
+  uploadMusic;
+
+
+client.auth.onAuthStateChange(
+  async(event,session)=>{
+
+    currentUser =
+      session?.user || null;
+
+  }
+);
+
+
+start();
+
+</script>
+
+</body>
+</html>
